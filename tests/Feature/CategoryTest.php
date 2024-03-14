@@ -119,4 +119,72 @@ class CategoryTest extends TestCase
         $total = Category::query()->count();
         assertEquals(0, $total);
     }
+
+    public function testDeleteMany()
+    {
+        $categories = [];
+        for ($i = 0; $i < 10; $i++) {
+            $categories[] = [
+                "id" => "ID $i",
+                "name" => "Name $i"
+            ];
+        }
+
+        $result = Category::insert($categories);
+        self::assertTrue($result);
+
+        $total = Category::count();
+        self::assertEquals(10, $total);
+
+        Category::whereNull("description")->delete();
+
+        $total = Category::count();
+        self::assertEquals(0, $total);
+
+    }
+
+    public function testCreate()
+    {
+        $request = [
+            "id" => "FOOD",
+            "name" => "Food",
+            "description" => "Food Category"
+        ];
+
+        $category = new Category($request);
+        $category->save();
+
+        self::assertNotNull($category->id);
+    }
+
+    public function testCreateUsingQueryBuilder()
+    {
+        $request = [
+            "id" => "FOOD",
+            "name" => "Food",
+            "description" => "Food Category"
+        ];
+
+        $category = Category::create($request);
+
+        self::assertNotNull($category->id);
+    }
+
+    public function testUpdateMass()
+    {
+        $this->seed(CategorySeeder::class);
+
+        $request = [
+            "name" => "Food Updated",
+            "description" => "Food Category Updated"
+        ];
+
+        $category = Category::find("FOOD");
+        $category->fill($request);
+        $category->save();
+
+        self::assertNotNull($category->id);
+    }
+
+
 }

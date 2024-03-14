@@ -7,4 +7,9 @@ SHOW TABLES;
 DESC categories;
 
 SELECT * FROM categories;
+SELECT * FROM vouchers;
+
+DESCRIBE comments;
+
+SELECT * FROM comments;
 

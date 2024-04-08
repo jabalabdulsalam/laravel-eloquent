@@ -7,9 +7,11 @@ SHOW TABLES;
 DESC categories;
 
 SELECT * FROM categories;
+
 SELECT * FROM vouchers;
 
 DESCRIBE comments;
 
-SELECT * FROM comments;
+SELECT * FROM products;
 
+SELECT * FROM customers_likes_products;

@@ -15,3 +15,13 @@ DESCRIBE comments;
 SELECT * FROM products;
 
 SELECT * FROM customers_likes_products;
+
+SELECT * FROM images;
+
+SELECT * FROM persons;
+
+SELECT * FROM employees;
+
+SELECT * FROM tags;
+
+SELECT * FROM taggables;

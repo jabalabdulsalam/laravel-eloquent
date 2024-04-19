@@ -33,7 +33,8 @@ class CategoryTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $categories[] = [
                 "id" => "ID $i",
-                "name" => "Name $i"
+                "name" => "Name $i",
+                "is_active" => true
             ];
         }
 
@@ -78,6 +79,7 @@ class CategoryTest extends TestCase
             $category = new Category();
             $category->id = "$i";
             $category->name = "Category $i";
+            $category->is_active = true;
             $category->save();
         }
 
@@ -97,7 +99,8 @@ class CategoryTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $categories[] = [
                 "id" => "ID $i",
-                "name" => "Name $i"
+                "name" => "Name $i",
+                "is_active" => true
             ];
         }
 
@@ -131,7 +134,8 @@ class CategoryTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $categories[] = [
                 "id" => "ID $i",
-                "name" => "Name $i"
+                "name" => "Name $i",
+                "is_active" => true
             ];
         }
 
@@ -217,7 +221,7 @@ class CategoryTest extends TestCase
         // $product = Product::where("category_id", $category->id)->get();
         $products = $category->products;
         self::assertNotNull($products);
-        self::assertCount(1, $products);
+        self::assertCount(2, $products);
     }
 
     public function testOneToManyQuery()
@@ -244,10 +248,10 @@ class CategoryTest extends TestCase
 
         $category = Category::find("FOOD");
         $products = $category->products;
-        self::assertCount(1, $products);
+        self::assertCount(2, $products);
 
         $outOfStockProducts = $category->products()->where("stock", "<=", 0)->get();
-        self::assertCount(1, $outOfStockProducts);
+        self::assertCount(2, $outOfStockProducts);
     }
 
     public function testHasManyThrough()
@@ -261,4 +265,31 @@ class CategoryTest extends TestCase
         self::assertNotNull($reviews);
         self::assertCount(2, $reviews);
     }
+
+    public function testQueryingRelations()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::find("FOOD");
+        $products = $category->products()->where("price", "=", 200)->get();
+
+        self::assertCount(1, $products);
+        self::assertEquals("2", $products[0]->id);
+    }
+
+    public function testAggregratingRelations()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::find("FOOD");
+        $total = $category->products()->count();
+
+        self::assertEquals(2, $total);
+
+        $total = $category->products()->where("price", 200)->count();
+
+        self::assertEquals(1, $total);
+    }
+
+
 }
